@@ -5,9 +5,9 @@ let auth = require('../auth');
 let Book = require('../controllers/Book');
 
 router.get('/', Book.list);
-router.get('/:id', Book.find);
-router.post('/', Book.create);
-router.put('/:id', Book.update);
-router.delete('/:id', Book.delete);
+router.get('/:id', auth.authenticate, Book.find);
+router.post('/', auth.authenticate, Book.create);
+router.put('/:id', auth.authenticate, Book.update);
+router.delete('/:id', auth.authenticate, Book.delete);
 
 module.exports = router;

@@ -1,15 +1,7 @@
 const User = require('../models/User');
 const ObjectId = require("mongodb").ObjectId;
 const jwt = require('jsonwebtoken');
-
-const passportJWT = require("passport-jwt");
-
-const ExtractJwt = passportJWT.ExtractJwt;
-
-const jwtOptions = {
-    secretOrKey: "FJS",
-    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
-};
+const cfg = require('../config')
 
 exports.create = function(req, res) {
     const user = req.body;
@@ -94,38 +86,6 @@ exports.delete = function(req, res) {
             error: false
         }).status(200)
     });
-}
-
-exports.token = function(req, res) {
-    const {email, password} = req.body;
-    User.find({email: email}, (e, user) => {
-
-        if(!user){
-            res.send({
-                message: 'Invalid User',
-                error: true
-            }).status(501)
-        }
-        res.send({password, pass: user.password});
-        if(user.password !== password){
-            res.send({
-                message: 'Invalid Password',
-                error: true
-            }).status(501)
-        }
-
-        const token = jwt.sign({id: user.id}, jwtOptions.secretOrKey);
-
-        res.send({
-            message: 'success',
-            token: token,
-            error: false
-        }).status(200);
-        res.send({data:user})
-    });
-
-
-
 }
 
 
