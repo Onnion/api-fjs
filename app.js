@@ -2,7 +2,7 @@ var express = require('express');
 var mongoose = require('mongoose');
 var app = express();
 var router = express.Router();
-// var auth = require('./auth');
+var auth = require('./auth');
 
 app.use('/books', require('./routes/book'))
 app.use('/users', require('./routes/users'))
