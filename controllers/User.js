@@ -1,33 +1,87 @@
-var User = require('../model/User');
-const UserService = () => {
+const User = require('../models/User');
+const ObjectId = require("mongodb").ObjectId;
 
-	let create = (user, callback) => {
-		User.insert(user, callback);
-	}
-
-	let update = (id, user, callback) => {
-		User.updateOne({_id: new ObjectId(id)}, user, callback);
-	}
-
-	let findAll = (callback) => {
-		User.find({}).toArray(callback);
-	}
-
-	let find = (user, callback) => {
-		User.find(user).toArray(callback);
-	}
-
-	let remove = (id, callback) => {
-		User.deleteOne({_id: new ObjectId(id)}, callback);
-	}
-
-	return {
-		delete: remove,
-		find: find,
-		findAll: findAll,
-		update: update,
-		create: create
-	}
+exports.create = function(req, res) {
+    console.log(req);
+    // User.insert(user, (err, docs) => {
+    //     if(err){
+    //         res.send({
+    //             message: err.message,
+    //             error: true
+    //         }).status(501)
+    //     }
+    //     res.send({
+    //         messsage: 'success',
+    //         data: docs,
+    //         error: false
+    //     }).status(200)
+    // });
 }
 
-module.exports = UserService;
+exports.update = function(req, res) {
+	const {id} = req.params;
+	const b=
+    User.updateOne({_id: new ObjectId(id)}, User, (err, docs) => {
+        if(err){
+            res.send({
+                message: err.message,
+                error: true
+            }).status(501)
+        }
+        res.send({
+            messsage: 'success',
+            data: docs,
+            error: false
+        }).status(200)
+    });
+}
+
+exports.list = function(req, res) {
+    User.find({}, (err, docs) => {
+        if(err){
+            res.send({
+                message: err.message,
+                error: true
+            }).status(501)
+        }
+        res.send({
+            messsage: 'success',
+            data: docs,
+            error: false
+        }).status(200)
+    });
+}
+
+exports.find = function(req, res) {
+    const {id} = req.params;
+    User.findOne({_id: new ObjectId(id)}, (err, docs) => {
+        if(err){
+            res.send({
+                message: err.message,
+                error: true
+            }).status(501)
+        }
+        res.send({
+            messsage: 'success',
+            data: docs,
+            error: false
+        }).status(200)
+    });
+}
+
+exports.delete = function(req, res) {
+    const {id} = req.params;
+    User.deleteOne({_id: new ObjectId(id)}, (err, docs) => {
+        if(err){
+            res.send({
+                message: err.message,
+                error: true
+            }).status(501)
+        }
+        res.send({
+            messsage: 'success',
+            data: docs,
+            error: false
+        }).status(200)
+    });
+}

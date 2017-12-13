@@ -1,19 +1,19 @@
-var passport = require("passport");
-var passportJWT = require("passport-jwt");
-var cfg = require("./config");
+const passport = require("passport");
+const passportJWT = require("passport-jwt");
+const cfg = require("./config");
 
-var ExtractJwt = passportJWT.ExtractJwt;
-var Strategy = passportJWT.Strategy;
-var params = {
+const ExtractJwt = passportJWT.ExtractJwt;
+const Strategy = passportJWT.Strategy;
+const params = {
   secretOrKey: cfg.jwtSecret,
-  jwtFromRequest: ExtractJwt.fromAuthHeader()
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
 };
 
 module.exports = function() {
 
-  var strategy = new Strategy(params, function(payload, done) {
+  const strategy = new Strategy(params, function(payload, done) {
 
-    var user = User.find(payload);
+    const user = User.find(payload.id);
     
     if (valid) {
       return done(null, {user: user});

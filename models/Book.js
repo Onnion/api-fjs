@@ -1,7 +1,6 @@
-var mongoose = require('mongoose');
-var bcrypt = require('bcrypt-nodejs');
+const mongoose = require('mongoose');
 
-var bookSchema = new mongoose.Schema({
+const bookSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true

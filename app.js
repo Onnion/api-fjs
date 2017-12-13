@@ -1,12 +1,16 @@
-var express = require('express');
-var mongoose = require('mongoose');
-var app = express();
-var router = express.Router();
-var auth = require('./auth');
+const express = require('express');
+const mongoose = require('mongoose');
+const app = express();
+const auth = require('./auth');
 
-app.use('/books', require('./routes/book'))
-app.use('/users', require('./routes/users'))
-app.use('/categories', require('./routes/category'))
+const bodyParser = require('body-parser');
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use('/books', require('./routes/book.js'))
+app.use('/users', require('./routes/user.js'))
+// app.use('/categories', require('./routes/category'))
 
 mongoose.connect('mongodb://127.0.0.1:27017/dbfjs', { useMongoClient: true});
 app.listen(3000, function () {

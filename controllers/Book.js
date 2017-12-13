@@ -1,8 +1,9 @@
-var Book = require('../models/Book')
-var ObjectId = require("mongodb").ObjectId;
+const Book = require('../models/Book')
+const ObjectId = require("mongodb").ObjectId;
 
 exports.create = function(req, res) {
-	Book.insert(book, (err, docs) => {
+	const book = req.body;
+	Book.create(book, (err, docs) => {
 		if(err){
 			res.send({
 				message: err.message,
@@ -16,8 +17,11 @@ exports.create = function(req, res) {
 		}).status(200)
 	});
 }
+
 exports.update = function(req, res) {
-	Book.updateOne({_id: new ObjectId(id)}, book, (err, docs) => {
+    const {id} = req.params;
+    const book = req.body;
+    Book.update({_id: new ObjectId(id)}, book, (err, docs) => {
 		if(err){
 			res.send({
 				message: err.message,
