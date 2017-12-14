@@ -47,11 +47,10 @@ exports.token = function (req, res) {
                 error: true
             }).status(501)
         }
-
-        const token = jwt.sign({id: user.id}, cfg.secretOrKey);
+        const token = jwt.sign({id: user.id}, cfg.secretOrKey, {expiresIn: 3600});
         res.send({
             message: 'success',
-            token: token,
+            tokens: {token:token, expires_in:3600},
             user: user,
             error: false
         }).status(200);
