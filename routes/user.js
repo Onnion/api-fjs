@@ -2,7 +2,7 @@ let express = require('express');
 let router  = express.Router();
 let auth = require('../auth');
 
-let User = require('../controllers/User');
+let User = require('../controllers/UserController');
 
 router.get('/', auth.authenticate, User.list);
 router.get('/:id', auth.authenticate, User.find);

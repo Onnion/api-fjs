@@ -1,4 +1,4 @@
-const Book = require('../models/Book')
+const Book = require('../models/BookModel')
 const ObjectId = require("mongodb").ObjectId;
 
 exports.create = function(req, res) {
