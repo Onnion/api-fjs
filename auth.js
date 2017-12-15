@@ -58,7 +58,7 @@ exports.token = function (req, res) {
         const token = jwt.sign({email: user.email, exp:new Date().setHours(date.getHours()+1)}, cfg.secretOrKey);
         res.send({
             message: 'success',
-            tokens: {token:token, expires_in:3600},
+            tokens: {token:token, expires_in:new Date().setHours(date.getHours()+1)},
             user: user,
             error: false
         }).status(200);
