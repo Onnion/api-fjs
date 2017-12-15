@@ -34,7 +34,7 @@ exports.authenticate = (req, res, next) => {
 
 exports.token = function (req, res) {
     const {email, password} = req.body;
-    const passMd5 = crypto.MD5(password);
+    const passMD5 = crypto.MD5(password).toString();
     User.findOne({email: email}, (err, user) => {
         if (err) {
             res.send({
@@ -44,13 +44,13 @@ exports.token = function (req, res) {
         }
         if (!user) {
             res.send({
-                message: 'Usuário ou senha incorretos.',
+                message: 'Usuário inválido',
                 error: true
             }).status(501)
         }
-        if (user.password !== passMd5) {
+        if (user.password !== passMD5) {
             res.send({
-                message: 'Usuário ou senha incorretos.',
+                message: 'Senha incorreta.',
                 error: true
             }).status(501)
         }
