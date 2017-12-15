@@ -2,9 +2,14 @@ const User = require('../models/UserModel');
 const ObjectId = require("mongodb").ObjectId;
 const jwt = require('jsonwebtoken');
 const cfg = require('../config')
+const crypto = require('crypto-js');
 
 exports.create = function(req, res) {
-    const user = req.body;
+    const user = {
+        email: req.body.email,
+        name: req.body.name,
+        password: crypto.MD5(req.body.password)
+    };
     User.create(user, (err, docs) => {
         if(err){
             res.send({

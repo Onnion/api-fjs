@@ -1,6 +1,7 @@
 const User = require('./models/UserModel');
 const jwt = require("jsonwebtoken");
 const cfg = require('./config');
+const crypto = require('crypto-js');
 
 exports.authenticate = (req, res, next) => {
     let token = req.headers['authorization'];
@@ -8,11 +9,13 @@ exports.authenticate = (req, res, next) => {
         try {
             let decoded = jwt.decode(token, cfg.secretOrKey);
             if (decoded.exp <= Date.now()) {
-                res.json(400, {error: 'Acesso Expirado, faça login novamente'});
+                res.status(400).send({
+                        message: 'Acesso Expirado, faça login novamente',
+                        error: true
+                    }).status(500);
             }
-            User.findOne({_id: decoded.iss}, (err, user) => {
+            User.findOne({email: decoded.email}, (err, user) => {
                 if (err) {
-                    console.log(err.message)
                     res.send({
                         message: err.message,
                         error: true
@@ -21,13 +24,17 @@ exports.authenticate = (req, res, next) => {
                 next();
             });
         } catch (err) {
-            res.status(401).send({message: 'Erro: Seu token é inválido'});
+            res.send({
+                message: 'Seu token é inválido.',
+                error: true
+            }).status(401);
         }
     }
 };
 
 exports.token = function (req, res) {
     const {email, password} = req.body;
+    const passMd5 = crypto.MD5(password);
     User.findOne({email: email}, (err, user) => {
         if (err) {
             res.send({
@@ -37,21 +44,21 @@ exports.token = function (req, res) {
         }
         if (!user) {
             res.send({
-                message: 'Invalid User',
+                message: 'Usuário ou senha incorretos.',
                 error: true
             }).status(501)
         }
-        if (user.password !== password) {
+        if (user.password !== passMd5) {
             res.send({
-                message: 'Invalid Password',
+                message: 'Usuário ou senha incorretos.',
                 error: true
             }).status(501)
         }
-
-        const token = jwt.sign({id: user.id}, cfg.secretOrKey);
+        const date = new Date();
+        const token = jwt.sign({email: user.email, exp:new Date().setHours(date.getHours()+1)}, cfg.secretOrKey);
         res.send({
             message: 'success',
-            token: token,
+            tokens: {token:token, expires_in:3600},
             user: user,
             error: false
         }).status(200);
